@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<IdentityRole>
+
+<div class="tbl-container">
+
+    <div style="display: flex;justify-content: space-between;align-items: center;">
+        <h2>Roles</h2>
+        <a href="/Roles/Create" class="btn btn-sec">Add Role</a>
+    </div>
+
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+            </tr>
+        }
+
+    </table>
+</div>

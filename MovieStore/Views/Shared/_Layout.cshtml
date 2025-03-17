@@ -1,0 +1,78 @@
+﻿﻿@using Microsoft.AspNetCore.Identity
+@using MovieStore.Models.Domain
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var roles = currentUser != null ? await UserManager.GetRolesAsync(currentUser) : new List<string>();
+    bool isAdmin = roles.Contains("Admin");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MovieStore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" href="/images/movie_filter_FILL0_wght400_GRAD0_opsz48.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="nav-bar">
+            <div class="logo">
+                movie store
+            </div>
+            <ul class="nav-link">
+                <li><a class="active" href="/Home/Index">Home</a></li>
+                <li><a href="/Home/About">About</a></li>
+
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    if (isAdmin)
+                    {
+                        <li>
+                            <a href="#">Admin <i class="fa fa-caret-down"></i></a>
+                            <ul class="dropdown-nav-link">
+                                <li><a href="/Genre/GenreList">Genres</a></li>
+                                <li><a href="/Movie/MovieList">Movies</a></li>
+                                <li><a href="/Roles/Index">Roles</a></li>
+                                <li><a href="/User/Index">Users</a></li>
+                                <li><a href="/UserAuthentication/Logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a href="/UserAuthentication/Logout">Logout</a></li>
+                    }
+                }
+                else
+                {
+                    <li><a href="/UserAuthentication/Login">Login</a></li>
+                }
+            </ul>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+        &#169; @DateTime.UtcNow.Year Movie Store
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
